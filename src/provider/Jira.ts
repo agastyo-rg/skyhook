@@ -42,6 +42,7 @@ export class Jira extends DirectParseProvider {
 
         // extract variable from Jira
         const issueHasAsignee = this.body?.issue?.fields?.assignee != null
+        const issueHasStatus = this.body?.issue?.fields?.status != null
         const issue = this.body.issue
         const user = this.body.user || { displayName: 'Anonymous' }
         const action = this.body.webhookEvent.split('_')[1]
@@ -52,7 +53,7 @@ export class Jira extends DirectParseProvider {
             url: this.createBrowseUrl(issue)
         }
         if (isIssue) {
-            embed.description = `${user.displayName} ${action} issue: ${embed.title}${issueHasAsignee ? ` (${issue.fields.assignee.displayName})` : ''} `
+            embed.description = `${issueHasStatus ? `[${issue.fields.assignee.displayName}] ` : ''}${user.displayName} ${action} issue: ${embed.title}${issueHasAsignee ? ` (${issue.fields.assignee.displayName})` : ''} `
         } else {
             const comment = this.body.comment
             embed.description = `${comment.updateAuthor.displayName} ${action} comment: ${comment.body}`
